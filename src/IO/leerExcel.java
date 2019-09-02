@@ -25,7 +25,7 @@ import java.util.Iterator;
 
 public class leerExcel {
 
-    private static final String File_path = "C:\\Users\\Gherni\\Documents\\work\\obras caf\\formato\\";
+    private static final String File_path = "C:\\Users\\soporte\\Documents\\HG\\SSEE\\Transporte\\obras CAF\\formato\\";
     private String FILE_NAME;
 
    public leerExcel(String name){
@@ -207,22 +207,32 @@ public class leerExcel {
                 DataFormatter f = new DataFormatter();
                 
                 for (int i = 0; i < le.length; i++) {
-                    celda c = new celda(le[i]);
-                    Cell auxC = datatypeSheet.getRow(c.getRow()).getCell(c.getCol());
-                    if(auxC.getCellType() == CellType.FORMULA) {
-                        System.out.print(auxC.getNumericCellValue()+"\t");
-                        //System.out.print(f.formatCellValue(auxC)+"\t");
-                        
+                    if(le[i].equals("XX")){
+                        System.out.print("S/D1\t");
                     }
                     else{
-                        if(auxC.getCellType()==CellType.NUMERIC){
-                            System.out.print(auxC.getNumericCellValue()+"\t");
+                    celda c = new celda(le[i]);
+                    Cell auxC = datatypeSheet.getRow(c.getRow()).getCell(c.getCol());
+                    
+                        if(auxC.getCellType() == CellType.FORMULA) {
+                            String text = f.formatCellValue(auxC);
+
+                                System.out.print(text+"\t");
+                            //System.out.print(f.formatCellValue(auxC)+"\t");
+
                         }
                         else{
-                            System.out.print(auxC.getRichStringCellValue().getString()+"\t");
+                            if(auxC.getCellType()==CellType.NUMERIC){
+                                //System.out.print(auxC.getNumericCellValue()+"\t");
+                                String text = f.formatCellValue(auxC);
+                                System.out.print(text+"\t");
+                            }
+                            else{
+                                System.out.print(auxC.getRichStringCellValue().getString()+"\t");
+                            }
+                            //System.out.print(auxC+"\t");
+                            //return auxC;
                         }
-                        //System.out.print(auxC+"\t");
-                        //return auxC;
                     }
                 }
                 System.out.println("");
