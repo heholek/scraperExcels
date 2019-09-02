@@ -25,9 +25,12 @@ import java.util.Iterator;
 
 public class leerExcel {
 
-    private static final String FILE_NAME = "Consolidado Mar-2018(1).xlsx";
+    private static final String File_path = "C:\\Users\\Gherni\\Documents\\work\\obras caf\\formato\\";
+    private String FILE_NAME;
 
-   
+   public leerExcel(String name){
+       FILE_NAME = name;
+   }
     public  void escribir(){
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Datatypes in Java");
@@ -57,7 +60,7 @@ public class leerExcel {
         }
 
         try {
-            FileOutputStream outputStream = new FileOutputStream(FILE_NAME);
+            FileOutputStream outputStream = new FileOutputStream(File_path +FILE_NAME);
             workbook.write(outputStream);
             workbook.close();
         } catch (FileNotFoundException e) {
@@ -71,7 +74,7 @@ public class leerExcel {
     public static void leer(){
         try {
             
-            FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
+            FileInputStream excelFile = new FileInputStream(new File(File_path));
            
             Workbook workbook = new XSSFWorkbook(excelFile);
             Sheet datatypeSheet = workbook.getSheetAt(0);
@@ -136,7 +139,7 @@ public class leerExcel {
     public Object readCell(String le){
         try {
 
-            FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
+            FileInputStream excelFile = new FileInputStream(new File(File_path+FILE_NAME));
            
             Workbook workbook = new XSSFWorkbook(excelFile);
             Sheet datatypeSheet = workbook.getSheetAt(0);
@@ -191,27 +194,39 @@ public class leerExcel {
     }
     public void readCellArray(String[] le){
         try {
-
-            FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
+            FileInputStream excelFile = new FileInputStream(new File(File_path+FILE_NAME));
            
             Workbook workbook = new XSSFWorkbook(excelFile);
-            Sheet datatypeSheet = workbook.getSheetAt(0);
-            Iterator<Row> iterator = datatypeSheet.iterator();
-
-            for (int i = 0; i < le.length; i++) {
-                celda c = new celda(le[i]);
-                Cell auxC = datatypeSheet.getRow(c.getRow()).getCell(c.getCol());
-                if(auxC.getCellType() == CellType.FORMULA) {
-                    System.out.println(auxC.getNumericCellValue()+"\t");
-                    //return auxC.getNumericCellValue();
+            //Sheet datatypeSheet = workbook.getSheetAt(0);
+            Iterator<Sheet> s = workbook.sheetIterator();
+            
+            //Iterator<Row> iterator = datatypeSheet.iterator();
+            while(s.hasNext()){
+                Sheet datatypeSheet = (Sheet)s.next();
+            
+                DataFormatter f = new DataFormatter();
+                
+                for (int i = 0; i < le.length; i++) {
+                    celda c = new celda(le[i]);
+                    Cell auxC = datatypeSheet.getRow(c.getRow()).getCell(c.getCol());
+                    if(auxC.getCellType() == CellType.FORMULA) {
+                        System.out.print(auxC.getNumericCellValue()+"\t");
+                        //System.out.print(f.formatCellValue(auxC)+"\t");
+                        
+                    }
+                    else{
+                        if(auxC.getCellType()==CellType.NUMERIC){
+                            System.out.print(auxC.getNumericCellValue()+"\t");
+                        }
+                        else{
+                            System.out.print(auxC.getRichStringCellValue().getString()+"\t");
+                        }
+                        //System.out.print(auxC+"\t");
+                        //return auxC;
+                    }
                 }
-                else{
-                    System.out.println(auxC+"\t");
-                    //return auxC;
-                }
+                System.out.println("");
             }
-            
-            
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -222,6 +237,4 @@ public class leerExcel {
         }
         //return null;
     }
-
-    
 }
